@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 // ハンドラの宣言
@@ -17,59 +20,36 @@ import (
 */
 func HelloHandler(w http.ResponseWriter, req *http.Request) {
 	// ハンドラの処理内容:
-	// GET メソッド時のみ通常通りのレスポンスを返す
-	if req.Method == http.MethodGet {
-		// 通常通りレスポンスを返す
-		io.WriteString(w, "Hello, World!\n")
-	} else {
-		// メソッドがGETではなかった場合は、Invalid method というレスポンスを405で返す
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Hello, World!\n")
 }
 
 // Posting Article ハンドラの定義
 func PostArticleHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPost {
-		io.WriteString(w, "Posting Article…\n")
-	} else {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Posting Article…\n")
 }
 
 // article listハンドラの定義
 func ArticleListHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodGet {
-		io.WriteString(w, "Article List…\n")
-	} else {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Article List…\n")
 }
 
-// article No.1 ハンドラの定義
+// GET /article/{id} ハンドラの定義
 func ArticleDetailHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodGet {
-		articleID := 1
-		resString := fmt.Sprintf("Article No.%d\n", articleID)
-		io.WriteString(w, resString)
-	} else {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+	articleID, err := strconv.Atoi(mux.Vars(req)["id"])
+	if err != nil {
+		http.Error(w, "Lnvalid query parameter", http.StatusBadRequest)
+		return
 	}
+	resString := fmt.Sprintf("Article No.%d\n", articleID)
+	io.WriteString(w, resString)
 }
 
 // article nice
 func PostNiceHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPost {
-		io.WriteString(w, "Posting Nice…\n")
-	} else {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Posting Nice…\n")
 }
 
 // comment
 func PostCommentHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPost {
-		io.WriteString(w, "Posting Comment…\n")
-	} else {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Posting Comment…\n")
 }
