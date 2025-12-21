@@ -28,9 +28,30 @@ func PostArticleHandler(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "Posting Article…\n")
 }
 
-// article listハンドラの定義
+// GET /article/listハンドラの定義
 func ArticleListHandler(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, "Article List…\n")
+	queryMap := req.URL.Query()
+
+	// 変数 page
+	var page int
+	// パラメータ page が1個以上ある場合
+	if p, ok := queryMap["page"]; ok && len(p) > 0 {
+		// パラメータ page に対応する１つ目の値を採用し、数値に変換する
+		var err error
+		page, err = strconv.Atoi(p[0])
+
+		// 数値に変換できない値だった場合は 400 エラーを返す
+		if err != nil {
+			http.Error(w, "Invalid query parameter", http.StatusBadRequest)
+			return
+		}
+		// パラメータ page が存在しなかった場合
+	} else {
+		// パラメータ page=1 と同じ処理を行う
+		page = 1
+	}
+	resString := fmt.Sprintf("Article List (page %d)\n", page)
+	io.WriteString(w, resString)
 }
 
 // GET /article/{id} ハンドラの定義
