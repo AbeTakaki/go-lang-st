@@ -73,7 +73,7 @@ func ArticleDetailHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Panicln(articleID)
+	log.Println(articleID)
 	article := models.Article1
 	json.NewEncoder(w).Encode(article)
 }
