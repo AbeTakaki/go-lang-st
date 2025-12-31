@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  mysql:
+    image: 'mysql:8.0'
+    container_name: db-for-go
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOTPASS}
+      MYSQL_DATABASE: ${DATABASE}
+      MYSQL_USER: ${DBUSERNAME}
+      MYSQL_PASSWORD: ${USERPASS}
+      MYSQL_ROOT_HOST: "%"
+      TZ: 'Asia/Tokyo'
+
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-volume:/var/lib/mysql
+volumes:
+  db-volume:
